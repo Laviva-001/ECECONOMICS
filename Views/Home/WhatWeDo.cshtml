@@ -1,0 +1,56 @@
+﻿@model DEDEAT.Model.Common.Paper
+@{
+    ViewBag.Title = "What We Do";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="container content-sm">Content Here</div>
+
+    <div>
+        <input id="search" size="50" />
+    </div>
+
+@section scripts {
+<script src="http://code.jquery.com/jquery-1.9.1.js"></script>
+<script src="http://code.jquery.com/ui/1.10.3/jquery-ui.js"></script>
+    <script>
+
+  $(function() {
+    var items = [ 'France', 'Italy', 'Malta', 'England',
+        'Australia', 'Spain', 'Scotland' ];
+
+    function split( val ) {
+      return val.split( /,\s*/ );
+    }
+    function extractLast( term ) {
+      return split( term ).pop();
+    }
+
+    $( "#search" )
+      .autocomplete({
+        minLength: 0,
+        source: function( request, response ) {
+          response( $.ui.autocomplete.filter(
+            items, extractLast( request.term ) ) );
+        },
+        focus: function() {
+          return false;
+        },
+        select: function( event, ui ) {
+          var terms = split( this.value );
+          // remove the current input
+          terms.pop();
+          // add the selected item
+          terms.push( ui.item.value );
+          // add placeholder to get the comma-and-space at the end
+          terms.push( "" );
+          this.value = terms.join( ", " );
+          return false;
+        }
+      });
+  });
+</script>
+
+
+
+}

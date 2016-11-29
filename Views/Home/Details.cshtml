@@ -1,0 +1,80 @@
+﻿@model DEDEAT.Portal.Areas.Admin.Models.PaperViewModel
+@using DEDEAT.Model.Common
+@{
+    ViewBag.Title = "Paper Details";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="breadcrumbs header-color">
+    <div class="container">
+        <h1 class="pull-left">@ViewBag.Title</h1>
+    </div>
+</div>
+
+<!--=== Content Part ===-->
+<div class="container content">
+    <div class="row blog-page blog-item">
+        <!-- Left Sidebar -->
+        <div class="col-md-9 md-margin-bottom-60">
+            <!--Blog Post-->
+            <div class="blog margin-bottom-40">
+                <h2 class="pull"><a href="#">@Model.paper.Title</a></h2>
+                <div class="blog-post-tags">
+                    <ul class="list-unstyled list-inline blog-info">
+                        <li><i class="fa fa-calendar"></i> @Model.paper.DateOfRelease.Value.ToString("dd MMM yyyy")</li>
+                        <li><i class="fa fa-institution"></i> <a href="@Model.paper.Author.Url" target="_blank">@Model.paper.Author.Name</a></li>
+                        <li><i class="fa fa-file-text-o"></i> <a href="#">@Model.paper.ResearchType.Name</a></li>
+                    </ul>
+                    <ul class="list-unstyled list-inline blog-tags">
+                        <li>
+                            <i class="fa fa-tags"></i>
+                            @foreach (var paperTag in Model.paper.PaperTag)
+                            {
+                                <a href="@Url.Action("ByPaperTag", "Home", new { tag=paperTag.Tag.Name})">@paperTag.Tag.Name</a>
+                            }
+
+
+                        </li>
+                    </ul>
+                </div>
+
+                <p>
+                    @Html.Raw(@Model.paper.Description)
+                </p>
+            </div>
+            <!--End Blog Post-->
+            <hr>
+     
+            @Html.ActionLink("Download", "Download", routeValues: new { id = Model.paper.PaperId }, htmlAttributes: new { @class = "btn-u" })
+
+        </div>
+        <!-- End Left Sidebar -->
+        <!-- Right Sidebar -->
+        <div class="col-md-3 magazine-page">
+            @{
+                var tagList = ViewBag.TagList as List<Tag>;
+            }
+             <div class="headline headline-md"><h2>Paper Tags</h2></div>
+            <ul class="list-unstyled blog-tags margin-bottom-30">
+
+                @foreach (var paperTag in tagList)
+                {
+                    <li>
+                        <a href="@Url.Action("ByPaperTag", "Home", new { tag=paperTag.Name})" title="@paperTag.PaperTag.Count papers">
+                            <i class="fa fa-tags"></i> @paperTag.Name
+                        </a>
+                    </li>
+                }
+                <li>
+                    <a class="btn-u btn-u-sm" href="@Url.Action("Sectors", "Home", new { Area = "" })" style="color: #fff; background: #940037;">
+                        More Tags
+                        <i class="fa fa-angle-double-right margin-left-5" style="color: #fff">
+                        </i>
+                    </a>
+                </li>
+            </ul>
+        </div>
+        <!-- End Right Sidebar -->
+    </div><!--/row-->
+</div><!--/container-->
+<!--=== End Content Part ===-->

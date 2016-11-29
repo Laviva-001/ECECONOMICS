@@ -1,0 +1,78 @@
+﻿@model DEDEAT.Portal.Areas.Admin.Models.PaperViewModel
+@{
+    ViewBag.Title = "Priority Sectors & Tags";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<div class="breadcrumbs header-color">
+    <div class="container">
+        <h1 class="pull-left">@ViewBag.Title</h1>
+    </div>
+</div>
+
+<div class="container content">
+<div class="row sky-form" style="padding:20px; margin: 0 0 20px 0;">
+            <div class="col-md-12">
+                <div class="col-md-1"></div>
+                <div class="col-md-10 tree">
+                    <ul>
+                        <li>
+                            <a>Research Priorities</a>
+                            <ul>
+                                <li>
+                                    <a href="@Url.Action("ByPaperTag", "Home", new { tag= "Manufacturing"})">
+                                        Manufacturing
+                                    </a>
+                                    
+                                </li>
+                                <li>
+                                    <a href="@Url.Action("ByPaperTag", "Home", new { tag="Tourism"})">
+                                        Tourism
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="@Url.Action("ByPaperTag", "Home", new { tag="Energy"})">
+                                        Energy
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="@Url.Action("ByPaperTag", "Home", new { tag="Automotive"})">
+                                        Automotive
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="@Url.Action("ByPaperTag", "Home", new { tag="Agri-Industry"})">
+                                        Agri-Industry
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="@Url.Action("ByPaperTag", "Home", new { tag= "Ocean's Economy" })">
+                                        Ocean's Economy
+                                    </a>
+                                </li>
+                            </ul>
+                        </li>
+                    </ul>
+                </div>
+                <div class="col-md-1"></div>
+</div>
+    </div>
+    <div class="row sky-form">
+        <div class="col-md-1"></div>
+        <div class="col col-md-10">
+            <div class="headline headline-md"><h2>Paper Tags</h2></div>
+            <ul class="list-unstyled blog-tags margin-bottom-30">
+                @foreach (var paperTag in Model.tagList)
+                {
+                    <li>
+                        <a href="@Url.Action("ByPaperTag", "Home", new { tag=paperTag.Name})" title="@paperTag.PaperTag.Count papers"  style="color:#555">
+                            <i class="fa fa-tags"></i> @paperTag.Name
+                        </a>
+                    </li>
+                }
+            </ul>
+       
+        </div>
+        <div class="col-md-1"></div>
+    </div>
+
+</div>

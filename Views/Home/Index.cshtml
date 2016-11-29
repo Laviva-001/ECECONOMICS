@@ -1,0 +1,348 @@
+﻿@model DEDEAT.Portal.Areas.Admin.Models.PaperViewModel
+
+@using PagedList.Mvc;
+@using DEDEAT.Portal.Helpers
+@using DEDEAT.Model.Common
+
+@{
+    ViewBag.Title = "Papers";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<link href="~/Content/select2/css/select2.min.css" rel="stylesheet" />
+<!--=== Breadcrumbs v1 ===-->
+<div class="breadcrumbs-v1">
+    <div class="container">
+        <h1>Eastern Cape Economic Research Portal</h1>
+        <span> Making Public Sector Research Accessible</span>
+    </div>
+</div>
+<!--=== End Breadcrumbs v1 ===-->
+
+<div class="container content-sm">
+    @using (Html.BeginForm("Filter", "Home", FormMethod.Post, new { id = "filterForm", @class = "sky-form" }))
+    {
+
+        @Html.HiddenFor(p => p.StartDate, new { id = "hdnStart" })
+        @Html.HiddenFor(p => p.EndDate, new { id = "hdnEnd" })
+        <fieldset>
+            <div class="row">
+                <section class="col-md-4">
+                    <label class="select">
+                        @Html.DropDownListFor(model => model.AuthorId, new SelectList(Model.Authors, "AuthorId", "Name", (Model == null) ? Guid.Empty : Model.AuthorId), "Select Author", new { @Class = "form-control", @onchange = "this.form.submit();" })
+                        <i></i>
+                    </label>
+                </section>
+                <section class="col-md-4">
+                    <label class="select">
+                        @Html.DropDownListFor(model => model.ResearchTypeId, new SelectList(Model.ResearchTypes, "TypeId", "Name", (Model == null) ? Guid.Empty : Model.ResearchTypeId), "Select Research Type", new { @Class = "form-control", @onchange = "this.form.submit();" })
+                        <i></i>
+                    </label>
+                </section>
+                <section class="col-md-4">
+                    <label class="select">
+                        <div id="reportrange" class="dtrange">
+                            <span></span>
+                            <i></i>
+                            <style>
+                                .dtrange {
+                                    display: block;
+                                    box-sizing: border-box;
+                                    -moz-box-sizing: border-box;
+                                    width: 100%;
+                                    height: 39px;
+                                    padding: 6px 10px;
+                                    outline: none;
+                                    border-width: 2px;
+                                    border-style: solid;
+                                    border-radius: 0;
+                                    background: #fff;
+                                    font: 15px/23px 'Open Sans', Helvetica, Arial, sans-serif;
+                                    color: #404040;
+                                    appearance: normal;
+                                    -moz-appearance: none;
+                                    -webkit-appearance: none;
+                                }
+                            </style>
+                            @*<b class="caret"></b>*@
+                        </div>
+                    </label>
+                </section>
+                <section class="col-md-8">
+                    <label class="input">
+                        @Html.TextBoxFor(model => model.SearchTerm, "", new
+                   {
+                       @class = "form-control",
+                       @onchange = "this.form.submit();",
+                       @Style = "position:absolute;  color:#08338f;",
+                       @placeholder = "Search"
+                   })
+                        <span class="input-group-btn">
+                            <button class="btn-u pull-right" type="button" style="margin: 3px 3px;" onclick="this.form.submit()"><i class="fa fa-search"></i></button>
+                        </span>
+                    </label>
+                </section>
+
+                <section class="col-md-3">
+                    <label class="select">
+                        @Html.ListBox("SelectedTags")
+
+                    </label>
+                </section>
+                <section class="col-md-1">
+                    <span class="input-group-btn">
+                        <button class="btn-u pull-right" type="button" style="margin: 0 0 0 1px;" onclick="this.form.submit()"><i class="fa fa-search"></i></button>
+                    </span>
+                </section>
+
+                <section class="col-md-12" style="margin-bottom:0px;">
+                    <ul class="list-unstyled blog-tags">
+                        @foreach (var paperTag in Model.tagList)
+                        {
+                            <li>
+                                <a href="@Url.Action("ByPaperTag", "Home", new { tag=paperTag.Name})" title="@paperTag.PaperTag.Count papers" style="color:#555">
+                                    <i class="fa fa-tags"></i> @paperTag.Name
+                                </a>
+                            </li>
+                        }
+                        <li>
+                            <a class="btn-u btn-u-sm" href="@Url.Action("Sectors", "Home", new { Area = "" })" style="color: #fff; background: #940037;">
+                                More Tags
+                                <i class="fa fa-angle-double-right margin-left-5" style="color: #fff">
+                                </i>
+                            </a>
+                        </li>
+                    </ul>
+                </section>
+                <section class="col-md-12">
+                    <p>
+                        <small class="pull-right">
+                            <strong>
+                                @Model.Count Paper(s) Found
+                            </strong>
+                        </small>
+                    </p>
+                </section>
+            </div><!--/row-->
+        </fieldset>
+    }
+
+</div>
+<!--=== Blog Posts ===-->
+<div class="bg-color-light">
+    <div class="container content-sm">
+        <div class="row">
+
+            <!-- Blog All Posts -->
+            <div class="col-md-9">
+                @if (Model.paperList.Count() > 0)
+                {
+                    foreach (var item in Model.paperList)
+                    {
+                    <!-- Blog Posts -->
+
+                        <div class="news-v3 bg-color-white margin-bottom-20 ">
+                            <div class="news-v3-in sky-form">
+                                <ul class="list-inline posted-info">
+                                    <li>Type: <a href="#">@item.ResearchType.Name</a></li>
+                                    <li>By: <a href="@item.Author.Url" target="_blank">@item.Author.Name</a></li>
+                                    <li>Date of Release: <a href="#">@item.DateOfRelease.Value.ToString("dd MMM yyyy")</a></li>
+                                </ul>
+                                <h2><strong><a href="@Url.Action("Details", "Home", new {id=item.PaperId })">@item.Title</a></strong></h2>
+                                @{ }
+                                <p>@WebUtil.MaxStringValue(@Html.StripHtmlTags(item.Description), 250)</p>
+                                <ul class="list-inline posted-info">
+                                    <li>
+                                        Source: <a href="@item.Source" target="_blank">@item.Source</a>
+                                    </li>
+                                </ul>
+                                <ul class="list-inline posted-info">
+                                    <li>
+                                        Tags:
+                                        @foreach (var paperTag in item.PaperTag)
+                                        {
+                                            <a href="@Url.Action("ByPaperTag", "Home", new { tag=paperTag.Tag.Name})">
+                                                @paperTag.Tag.Name
+                                            </a>@:,
+                            }
+                                    </li>
+
+                                </ul>
+                                <div class="row">
+                                    <div class="col col-md-3">
+                                        <a class="btn-u btn-u-sm" href="@Url.Action("Details", "Home", new { id=item.PaperId})" style="color:#fff">
+                                            Read More
+                                            <i class="fa fa-angle-double-right margin-left-5">
+                                            </i>
+                                        </a>
+                                    </div>
+                                    <div class="col col-md-3">
+                                        <ul class="post-shares">
+                                            <li>
+                                                <a>
+                                                    <i class="rounded-x icon-eye"></i>
+                                                    @if (item.Visits > 0)
+                                                    {
+                                                        <span>@item.Visits</span>
+                                                    }
+                                                    else
+                                                    {
+                                                        <span>0</span>
+                                                    }
+                                                </a>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                    <div class="col col-md-3"></div>
+                                    <div class="col col-md-3"></div>
+                                </div>
+                            </div>
+                        </div>
+                    <!-- End Blog Posts -->
+
+                                        }
+                                    }
+                                    else
+                                    {
+                                        <div class="news-v3 bg-color-white margin-bottom-20 sky-form">
+                                            <div class="news-v3-in">
+                                                No Papers Found
+                                            </div>
+                                        </div>
+                                    }
+
+                <footer>
+                    @{
+                        List<string> divContainer = new List<string>();
+                        divContainer.Add("col-md-9");
+
+                        List<string> ul = new List<string>();
+                        ul.Add("pagination");
+                        ul.Add("pagination-sm");
+                        ul.Add("pull-right");
+                        ul.Add("push-down-10");
+                        ul.Add("push-up-10");
+                    }
+
+                    @Html.PagedListPager(Model.paperList, page => Url.Action("Index", new { page = page }), new PagedListRenderOptions { ContainerDivClasses = divContainer, UlElementClasses = ul })
+
+                </footer>
+
+                <!-- End Pager v2 -->
+            </div>
+            <!-- End Blog All Posts -->
+            <!-- Blog Sidebar -->
+            <div class="col-md-3">
+                <div class="headline-v2"><h2>Our Partners</h2></div>
+                <div class="row">
+                    <!-- Trending -->
+                    @{
+
+                        var partners = ViewBag.Partners as List<Partner>;
+                    }
+
+                    @foreach (var item in partners)
+                    {
+                        <div class="magazine-posts col-md-12 col-sm-6 margin-bottom-10">
+                            <div class="magazine-posts-img sky-form">
+                                <a href="@item.Url" target="_blank">
+                                    <img class="img-responsive" title="@item.Url" src="@Url.Content("~/" + item.Photo)" alt="@item.Name logo">
+                                </a>
+                            </div>
+                        </div>
+                    }
+
+                </div>
+                <!-- End Trending -->
+                <!-- Tags v2 -->
+            </div>
+            <!-- End Blog Sidebar -->
+        </div>
+        <hr />
+        <br />
+    </div>
+
+</div>
+
+@section scripts {
+
+    <script src="~/Scripts/bootstrap/bootstrap-datepicker.js"></script>
+    <script src="~/Scripts/moment.min.js"></script>
+    <script src="~/Scripts/daterangepicker/daterangepicker.js"></script>
+    @*<script type="text/javascript" src="~/Content/public/plugins/owl-carousel/owl-carousel/owl.carousel.js"></script>
+        <script type="text/javascript" src="~/Content/public/js/plugins/owl-carousel.js"></script>*@
+    <script src="~/Content/select2/js/select2.min.js"></script>
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $("#SelectedTags").select2({
+                tags: true,
+                placeholder: "Please select tag(s)",
+                width: 300
+            });
+
+        });
+    </script>
+    <script>
+        /* reportrange */
+        if ($("#reportrange").length > 0) {
+    
+            $("#reportrange").daterangepicker({
+                ranges: {
+                    //'Today': [moment(), moment()],
+                    //'Yesterday': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
+                    //'Last 7 Days': [moment().subtract(6, 'days'), moment()],
+                    //'Last 30 Days': [moment().subtract(29, 'days'), moment()],
+                    //'All the time': [null, null],
+                    'This Week': [moment().startOf('week'), moment().endOf('week')],
+                    'This Month': [moment().startOf('month'), moment().endOf('month')],
+                    'This Quarter': [moment().startOf('quarter'), moment().endOf('quarter')],
+                    'This Year': [moment().startOf('year'), moment().endOf('year')],                    //'Last Month': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')],
+                    'Last Year': [moment().subtract(1, 'year').startOf('year'), moment().subtract(1, 'year').endOf('year')]
+                },
+                opens: 'left',
+                buttonClasses: ['btn btn-default'],
+                applyClass: 'btn-small btn-primary',
+                cancelClass: 'btn-small',
+                format: 'DD.MM.YYYY',
+                separator: ' to ',
+                startDate: moment().subtract('days', 1),
+                endDate: moment()
+            }, function (start, end) {
+                $('#reportrange span').html(start.format('MMMM D, YYYY') + ' - ' + end.format('MMMM D, YYYY'));
+                $('#hdnStart').val(start.format('MMMM D, YYYY'));
+                $('#hdnEnd').val(end.format('MMMM D, YYYY'));
+                $("#filterForm").submit();
+            });
+
+            if ($("#hdnStart").val() == '') {
+                $("#reportrange span").html("Filter Results By Date");
+            }
+            else {
+                @{
+                    string start = null;
+                    if (Model.StartDate != null)
+                    { start = @Model.StartDate.Value.ToString("dd MMM yyyy"); }
+
+                    string end = null;
+                    if (Model.EndDate != null)
+                    { end = @Model.EndDate.Value.ToString("dd MMM yyyy"); }
+
+                }
+
+                $("#reportrange span").html(' @start - @end ');
+                $('#reportrange').on('cancel.daterangepicker', function (ev, picker) {
+                    //do something, like clearing an input
+                    console.log("event", ev);
+                    $('#hdnStart').val('');
+                    $('#hdnEnd').val('');
+                    $("#reportrange span").html("Filter Results By Date");
+                });
+            }
+        }
+        jQuery(document).ready(function () {
+            App.init();
+            OwlCarousel.initOwlCarousel();
+            ParallaxSlider.initParallaxSlider();
+        });
+    </script>
+}

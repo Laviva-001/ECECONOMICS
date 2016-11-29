@@ -1,0 +1,224 @@
+﻿@model DEDEAT.Portal.Areas.Admin.Models.PaperViewModel
+
+@using PagedList.Mvc;
+@using DEDEAT.Portal.Helpers
+
+@using DEDEAT.Model.Common
+@{
+    ViewBag.Title = "Featured Research";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<!--=== End Breadcrumbs v1 ===-->
+<div class="breadcrumbs header-color">
+    <div class="container">
+        <h1 class="pull-left">@ViewBag.Title</h1>
+        @*<ul class="pull-right breadcrumb">
+                <li><a href="index.html">Home</a></li>
+                <li class="active">About Us</li>
+            </ul>*@
+    </div><!--/container-->
+</div>
+
+<!--=== Blog Posts ===-->
+<div class="bg-color-light">
+    <div class="container content-sm">
+
+
+        <div class="row">
+
+            <!-- Blog All Posts -->
+            <div class="col-md-9">
+                @if (Model.featuredPaperList.Count() > 0)
+                {
+                    foreach (var item in Model.featuredPaperList)
+                    {
+                    <!-- Blog Posts -->
+                        <div class="news-v3 bg-color-white margin-bottom-20">
+                            <div class="news-v3-in sky-form">
+                                <ul class="list-inline posted-info">
+                                    <li>Type <a href="#">@item.ResearchType.Name</a></li>
+                                    <li>By <a href="#">@item.Author.Name</a></li>
+                                    <li>Posted <a href="#">@item.DateOfRelease.Value.ToString("dd MMM yyyy")</a></li>
+                                </ul>
+                                <h2><strong><a href="@Url.Action("Details", "Home", new {id=item.PaperId })">@item.Title</a></strong></h2>
+                                @{ }
+                                <p>@WebUtil.MaxStringValue(@Html.StripHtmlTags(item.Description), 250)</p>
+                                <ul class="list-inline posted-info">
+                                    <li>
+                                        Source: <a href="@item.Source" target="_blank">@item.Source</a>
+                                    </li>
+                                </ul>
+                                <ul class="list-inline posted-info">
+                                    <li>
+                                        Tags:
+                                        @foreach (var paperTag in item.PaperTag)
+                                        {
+                                            <a href="@Url.Action("ByPaperTag", "Home", new { tag=paperTag.Tag.Name})">
+                                                @paperTag.Tag.Name
+                                            </a>@:,
+                            }
+                                    </li>
+                      
+                                </ul>
+
+                                <div class="row">
+                                    <div class="col col-md-3">
+                                        <a class="btn-u btn-u-sm" href="@Url.Action("Details", "Home", new { id=item.PaperId})" style="color:#fff">
+                                            Read More
+                                            <i class="fa fa-angle-double-right margin-left-5"></i>
+                                        </a>
+                                    </div>
+                                    <div class="col col-md-3">
+                                        <ul class="post-shares">
+                                            <li>
+                                                <a>
+                                                    <i class="rounded-x icon-eye"></i>
+                                                    @if (item.Visits > 0)
+                                                    {
+                                                        <span>@item.Visits</span>
+                                                    }
+                                                    else
+                                                    {
+                                                        <span>0</span>
+                                                    }
+                                                </a>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                    <div class="col col-md-3"></div>
+                                    <div class="col col-md-3"></div>
+                                </div>
+                              </div>
+                        </div>
+                    <!-- End Blog Posts -->
+
+                    }
+                }
+                else
+                {
+                    <div class="news-v3 bg-color-white margin-bottom-20 sky-form">
+                        <div class="news-v3-in">
+                            No Papers Found
+                        </div>
+                    </div>
+                }
+                <!-- Pager v2 -->
+                <footer>
+
+                    @{
+                        List<string> divContainer = new List<string>();
+                        divContainer.Add("col-md-9");
+
+                        List<string> ul = new List<string>();
+                        ul.Add("pagination");
+                        ul.Add("pagination-sm");
+                        ul.Add("pull-right");
+                        ul.Add("push-down-10");
+                        ul.Add("push-up-10");
+                    }
+
+                    @Html.PagedListPager(Model.featuredPaperList, page => Url.Action("Featured", new { page = page }), new PagedListRenderOptions { ContainerDivClasses = divContainer, UlElementClasses = ul })
+
+                </footer>
+                <!-- End Pager v2 -->
+            </div>
+            <!-- End Blog All Posts -->
+            <!-- Blog Sidebar -->
+
+            <div class="col-md-3 sky-form">
+
+                <!-- Tags v2 -->
+
+                <div class="headline headline-md"><h2>Paper Tags</h2></div>
+                <ul class="list-unstyled blog-tags margin-bottom-30 ">
+
+                    @foreach (var paperTag in Model.tagList)
+                    {
+                        <li>
+                            <a href="@Url.Action("ByPaperTag", "Home", new { tag=paperTag.Name})" title="@paperTag.PaperTag.Count papers" style="color:#555">
+                                <i class="fa fa-tags"></i> @paperTag.Name
+                            </a>
+                        </li>
+                    }
+                    <li>
+                        <a class="btn-u btn-u-sm" href="@Url.Action("Sectors", "Home", new { Area = "" })" style="color: #fff; background: #940037;">
+                            More Tags
+                            <i class="fa fa-angle-double-right margin-left-5" style="color: #fff">
+                            </i>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <hr />
+        <br />
+
+    </div>
+
+</div>
+<!--=== End Blog Posts ===-->
+@section scripts {
+
+    <script src="~/Scripts/bootstrap/bootstrap-datepicker.js"></script>
+    <script src="~/Scripts/moment.min.js"></script>
+    <script src="~/Scripts/daterangepicker/daterangepicker.js"></script>
+    <script type="text/javascript" src="~/Content/public/plugins/owl-carousel/owl-carousel/owl.carousel.js"></script>
+    <script type="text/javascript" src="~/Content/public/js/plugins/owl-carousel.js"></script>
+
+    <script>
+        /* reportrange */
+        if ($("#reportrange").length > 0) {
+            $("#reportrange").daterangepicker({
+                ranges: {
+                    'Today': [moment(), moment()],
+                    'Yesterday': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
+                    'Last 7 Days': [moment().subtract(6, 'days'), moment()],
+                    'Last 30 Days': [moment().subtract(29, 'days'), moment()],
+                    'This Month': [moment().startOf('month'), moment().endOf('month')],
+                    'Last Month': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
+                },
+                opens: 'left',
+                buttonClasses: ['btn btn-default'],
+                applyClass: 'btn-small btn-primary',
+                cancelClass: 'btn-small',
+                format: 'MM.DD.YYYY',
+                separator: ' to ',
+                startDate: moment().subtract('days', 1),
+                endDate: moment()
+            }, function (start, end) {
+
+                $('#reportrange span').html(start.format('MM D, YYYY') + ' - ' + end.format('MM D, YYYY'));
+                $('#hdnStart').val(start.format('MMMM D, YYYY'));
+                $('#hdnEnd').val(end.format('MMMM D, YYYY'));
+                $("#filterForm").submit();
+            });
+
+            if ($("#hdnStart").val() == '') {
+                $("#reportrange span").html("Filter Results By Date");
+            }
+            else {
+                @{
+                    string start = null;
+                    if (Model.StartDate != null)
+                    { start = @Model.StartDate.Value.ToString("MMMM dd, yyyy"); }
+
+                    string end = null;
+                    if (Model.EndDate != null)
+                    { end = @Model.EndDate.Value.ToString("MMMM dd, yyyy"); }
+
+                }
+
+                $("#reportrange span").html(' @start - @end ');
+
+            }
+        }
+
+        jQuery(document).ready(function () {
+            App.init();
+            OwlCarousel.initOwlCarousel();
+            ParallaxSlider.initParallaxSlider();
+        });
+    </script>
+
+}

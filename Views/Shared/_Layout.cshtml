@@ -1,0 +1,254 @@
+﻿@using DEDEAT.Portal.Helpers
+
+<!DOCTYPE html>
+<!--[if IE 8]> <html lang="en" class="ie8"> <![endif]-->
+<!--[if IE 9]> <html lang="en" class="ie9"> <![endif]-->
+<!--[if !IE]><!-->
+<html lang="en">
+<!--<![endif]-->
+<head>
+    <title>@ViewBag.Title - Research Portal</title>
+    <!-- Meta -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <!-- Favicon -->
+    <link rel="shortcut icon" href="favicon.ico">
+    <!-- Web Fonts -->
+    <link rel='stylesheet' type='text/css' href='//fonts.googleapis.com/css?family=Open+Sans:400,300,600&amp;subset=cyrillic,latin'>
+
+    <link href="~/Content/dist/summernote.css" rel="stylesheet" />
+    <link rel="stylesheet" type="text/css" class="ui" href="~/Content/semantic.min.css">
+    <link href="~/Content/Site.css" rel="stylesheet" />
+    
+
+    <!-- CSS Global Compulsory -->
+    @*@Styles.Render("~/Content/css/global")
+        <!-- CSS Header and Footer -->
+        @Styles.Render("~/Content/css/header")
+        <!-- CSS Implementing Plugins -->
+        @Styles.Render("~/Content/css/plugins")
+        <!-- CSS Customization -->
+        @Styles.Render("~/Content/css/customization")*@
+
+    <link href="~/Content/bootstrap-tagsinput.css" rel="stylesheet" />
+    <!-- CSS Global Compulsory -->
+    <link rel="stylesheet" href="~/Content/public/plugins/bootstrap/css/bootstrap.min.css">
+    <link href="~/Content/Public/css/ie8.css" rel="stylesheet" />
+    <link href="~/Content/Public/css/blocks.css" rel="stylesheet" />
+    <link href="~/Content/Public/css/plugins.css" rel="stylesheet" />
+    <link href="~/Content/Public/css/app.css" rel="stylesheet" />
+    <link rel="stylesheet" href="~/Content/public/css/style.css">
+    <!-- CSS Header and Footer-->
+    <link rel="stylesheet" href="~/Content/public/css/headers/header-default.css">
+    <link rel="stylesheet" href="~/Content/public/css/footers/footer-v1.css">
+    <!-- CSS Implementing Plugins-->
+    <link rel="stylesheet" href="~/Content/public/plugins/animate.css">
+    <link rel="stylesheet" href="~/Content/public/plugins/line-icons/line-icons.css">
+    <link rel="stylesheet" href="~/Content/public/plugins/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" href="~/Content/public/plugins/fancybox/source/jquery.fancybox.css">
+
+    <link rel="stylesheet" href="~/Content/Public/plugins/sky-forms-pro/skyforms/css/sky-forms.css">
+    <link rel="stylesheet" href="~/Content/Public/plugins/owl-carousel/owl-carousel/owl.carousel.css">
+    <!-- CSS Customization -->
+    <link rel="stylesheet" href="~/Content/public/css/custom.css">
+    <link href="~/Content/datepicker/css/bootstrap-datepicker3.css" rel="stylesheet" />
+
+    <!-- CSS Select2 -->
+    <link href="~/Content/select2/css/select2.min.css" rel="stylesheet" />
+    <link href="~/Content/Public/css/sectors.css" rel="stylesheet" />
+    @Scripts.Render("~/bundles/modernizr")
+</head>
+<body>
+    <div class="wrapper">
+        <!--=== Header ===-->
+        <div class="header">
+            <div class="container">
+                <!-- Logo -->
+                <a class="logo" href="/">
+                    <img src="~/content/public/img/Logo-jpg.jpg" alt="Logo" style="height:140px;">
+                </a>
+                <!-- End Logo -->
+                <!-- Topbar -->
+                <div class="topbar">
+                    <ul class="loginbar pull-right">
+
+                        @Html.Partial("_LoginPartial")
+                    </ul>
+                </div>
+                <!-- End Topbar -->
+                <!-- Toggle get grouped for better mobile display -->
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-responsive-collapse">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="fa fa-bars"></span>
+                </button>
+                <!-- End Toggle -->
+            </div><!--/end container-->
+            <!-- Collect the nav links, forms, and other content for toggling -->
+            <div class="collapse navbar-collapse mega-menu navbar-responsive-collapse">
+                <div class="container">
+                    <ul class="nav navbar-nav">
+                        <!-- Home -->
+                        <li class="@Html.ActivePage("Home", new[] { "Index", "Details" })">
+                            <a href="@Url.Action("Index", "Home", new  { Area=""})" class="" data-toggle="">
+                                Home
+                            </a>
+                        </li>         <!-- Home -->
+                        <li class="@Html.ActivePage("Home", new[] { "About" })">
+                            <a href="@Url.Action("About", "Home", new { Area = "" })" class="" data-toggle="">
+                                About The Portal
+                            </a>
+                        </li>
+                        <!-- End Home -->
+                        <li class="@Html.ActivePage("Home", new[]{"Featured"})">
+                            <a href="@Url.Action("Featured", "Home", new { Area = "" })" class="" data-toggle="">
+                                Featured
+                            </a>
+                        </li>
+                        <!-- End Home -->
+                        <!-- Home -->
+                        <li class="@Html.ActivePage("Home", new[] { "Sectors" })">
+                            <a href="@Url.Action("Sectors", "Home", new { Area = "" })" class="" data-toggle="">
+                                Priority Sectors & Tags
+                            </a>
+                        </li>
+                        <!-- Home -->
+                        @*<li class="">
+                                <a href="@Url.Action("Contact", "Home", new { Area = "" })" class="" data-toggle="">
+                                    Contact Us
+                                </a>
+                            </li>*@
+                        <!-- End Home -->
+                        @if (User.Identity.IsAuthenticated == true)
+                        {
+                            <li class="">
+                                <a href="@Url.Action("Index", "Paper", new { Area = "Admin" })" class="" data-toggle="">
+                                    Admin
+                                </a>
+                            </li>
+                        }
+                    </ul>
+                </div><!--/end container-->
+            </div><!--/navbar-collapse-->
+        </div>
+        <!--=== End Header ===-->
+        @RenderBody()
+        <!--=== Footer Version 1 ===-->
+        <div class="footer-v1">
+            <div class="footer">
+                <div class="container">
+                    <div class="row">
+
+                        <!-- Latest -->
+                        <div class="col-md-4 md-margin-bottom-40">
+                            <div class="posts">
+                                <div class="headline"><h2>Latest Papers</h2></div>
+                                <ul class="list-unstyled latest-list latest-papers">
+                                  
+                                </ul>
+                            </div>
+                        </div><!--/col-md-3-->
+                        <!-- End Latest -->
+                        <!-- Link List -->
+                        <div class="col-md-4 md-margin-bottom-40">
+                            <div class="headline"><h2>Useful Links</h2></div>
+                            <ul class="list-unstyled link-list">
+                                <li><a href="http://www.econ3x3.org/" target="_blank">Econ3x3</a><i class="fa fa-angle-right"></i></li>
+                                <li><a href="http://www.worldbank.org/en/research" target="_blank">World Bank</a><i class="fa fa-angle-right"></i></li>
+                                <li><a href="http://www.project-syndicate.org/" target="_blank">Project Syndicate</a><i class="fa fa-angle-right"></i></li>
+                                <li><a href="https://www.gtac.gov.za/" target="_blank">Government Technical Advisory Centre</a><i class="fa fa-angle-right"></i></li>
+                                <li><a href="http://www.dpru.uct.ac.za/" target="_blank">Development Policy Research Unit</a><i class="fa fa-angle-right"></i></li>
+                                <li><a href="http://www.saldru.uct.ac.za/" target="_blank">Southern Africa Labour and Development Studies Unit</a><i class="fa fa-angle-right"></i></li>
+                            </ul>
+                        </div><!--/col-md-3-->
+                        <!-- End Link List -->
+                        <!-- Address -->
+                        <div class="col-md-4 map-img md-margin-bottom-40">
+                            <div class="headline"><h2>Contact Us</h2></div>
+                            <address class="md-margin-bottom-40">
+                                Beacon Hill, Hockley, King Williams Town <br />
+                                South Africa, 5605<br />
+                                Tel: (043) 605 7337<br />
+                                Email: <a href="mailto:research@dedea.gov.za" class="">research@dedea.gov.za</a>
+                            </address>
+                        </div><!--/col-md-3-->
+                        <!-- End Address -->
+                    </div>
+                </div>
+            </div><!--/footer-->
+            <div class="copyright">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <p>
+                                @DateTime.Now.Year &copy; All Rights Reserved.
+                                <a href="@Url.Action("Index", "Home", new {Area = ""})">Research Portal</a> | Created By: <a target="_blank" href="https://www.bcx.co.za/Services-and-Solutions/Application-and-Software-Services/Applications">Business Connexion</a>
+                            </p>
+                        </div>
+                        <!-- Social Links -->
+                        <div class="col-md-6">
+                            <ul class="footer-socials list-inline">
+                                <li>
+                                    <a href="http://www.twitter.com/DEDEA_EC" target="_blank" class="tooltips" data-toggle="tooltip" data-placement="top" title="" data-original-title="Facebook">
+                                        <i class="fa fa-facebook"></i>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="http://www.twitter.com/DEDEA_EC" target="_blank" class="tooltips" data-toggle="tooltip" data-placement="top" title="www.twitter.com/DEDEA_EC" data-original-title="Twitter">
+                                        <i class="fa fa-twitter"></i>
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+                        <!-- End Social Links -->
+                    </div>
+                </div>
+            </div><!--/copyright-->
+        </div>
+        <!--=== End Footer Version 1 ===-->
+    </div><!--/wrapper-->
+    @Scripts.Render("~/bundles/jquery")
+    <!-- JS Global Compulsory -->
+    @Scripts.Render("~/bundles/js/global")
+    <!-- JS Implementing Plugins -->
+    @Scripts.Render("~/bundles/js/jsplugins")
+    <!-- JS Customization -->
+    @Scripts.Render("~/bundles/js/customization")
+    <!-- JS Page Level -->
+    @Scripts.Render("~/bundles/js/pagelevel")
+    <script type="text/javascript">
+        jQuery(document).ready(function () {
+            App.init();
+            FancyBox.initFancybox();
+
+            $.ajax({
+                url: '@Url.Action("LatestPapers", "Home", new  {Area="" })',
+                dataType: "json",
+                type: "GET",
+                contentType: 'application/json; charset=utf-8',
+                async: true,
+                processData: false,
+                cache: false,
+                success: function (data) {
+                    console.log(data);
+                    $.each(data, function (i, paper) {
+                        $(".latest-papers").append('<li><a href="/Home/Details/'+paper.id+'">'+paper.Title+'</a> <small>'+paper.Date+'</small></li>')
+                    });
+                    
+                    //
+                },
+                error: function (xhr) {
+                    console.log('error');
+                }
+            });
+        });
+    </script>
+    @RenderSection("scripts", required: false)
+    <!--[if lt IE 9]>
+        <script src="assets/plugins/respond.js"></script>
+        <script src="assets/plugins/html5shiv.js"></script>
+        <script src="assets/plugins/placeholder-IE-fixes.js"></script>
+    <![endif]-->
+</body>
+</html>

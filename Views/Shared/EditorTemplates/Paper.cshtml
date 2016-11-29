@@ -1,0 +1,64 @@
+﻿@model DEDEAT.Model.Common.Paper
+
+@Html.HiddenFor(p => p.PaperId)
+@Html.HiddenFor(p => p.CreatedDate)
+@Html.HiddenFor(p => p.ModifiedDate)
+@Html.HiddenFor(p => p.CreatedBy)
+@Html.HiddenFor(p => p.ModifiedBy)
+@Html.HiddenFor(p => p.InActive)
+
+
+<div class="form-group has-success">
+
+    @Html.LabelFor(x => x.Title, new { @Class = "text", @Style = "color:#08338f;top:1px; float:left; padding-right:81px;" })
+    @Html.TextBoxFor(x => x.Title, new { @Class = "input-sm form-control", @Style = "top:1px" })
+    @*@Html.ValidationMessageFor(x => x.Title)*@
+    <br />
+
+    @Html.Label("Author", new { @Class = "text", @Style = "color:#08338f;top:1px; float:left; padding-right:81px;" })
+    @Html.DropDownListFor(x => x.AuthorId, new SelectList(ViewBag.Authors, "AuthorId", "Name", (Model == null) ? Guid.Empty : Model.AuthorId), "Select...", new { @Class = "form-control" })
+    <br />
+
+    @Html.Label("Type", new { @Class = "text", @Style = "color:#08338f;top:1px; float:left; padding-right:81px;" })
+    @Html.DropDownListFor(x => x.TypeId, new SelectList(ViewBag.ResearchTypes, "TypeId", "Name", (Model == null) ? Guid.Empty : Model.TypeId), "Select...", new { @Class = "form-control" })
+    <br />
+
+    @Html.LabelFor(x => x.Description, new { @Class = "text", @Style = "color:#08338f;top:1px; float:left; padding-right:39px;" })
+    @Html.TextAreaFor(x => x.Description, 10, 55, new { @Class = "input-sm form-control", @Style = "top:1px" })
+    @*@Html.ValidationMessageFor(x => x.Description)*@
+    <br />
+    @Html.LabelFor(x => x.Summary, new { @Class = "text", @Style = "color:#08338f;top:1px; float:left; padding-right:39px;" })
+    @Html.TextAreaFor(x => x.Summary, 10, 55, new { @Class = "input-sm form-control", @Style = "top:1px" })
+    @*@Html.ValidationMessageFor(x => x.Description)*@
+    <br />
+
+    @{
+        var tags = "";
+        foreach (var item in Model.PaperTag)
+        {
+            tags += item.Tag.Name + ",";
+        }
+    }
+
+
+    @Html.Label("Tags", new { @Class = "text", @Style = "color:#08338f;top:1px; float:left; padding-right:81px;" })
+    <br />
+    <input type="text" class="form-control AutoComplete" value="@tags" id="tags" name="tags" data-role="tagsinput" placeholder="Type something and hit enter" />
+    <br />
+
+    @if (Model.PaperId != Guid.Empty)
+    {
+        @Html.Label("View Document", new { @Class = "text", @Style = "color:#08338f;top:1px; float:left; padding-right:81px;" })
+        @Html.ActionLink("Download", "Download", routeValues: new { id = Model.PaperId }, htmlAttributes: new { @class = "btn btn-success btn-xs", @style = "Width:80px" })
+    }
+    <br />
+    @Html.Label("Upload Research Paper", new { @Class = "text", @Style = "color:#08338f;top:1px; float:left; padding-right:81px;" })
+    <input id="ResearchPaperFile" name="ResearchPaperFile" Class="input-sm form-control" Style="top:1px" type="file">
+    <br />
+
+    @Html.LabelFor(x => x.DateOfRelease, new { @Class = "text", @Style = "color:#08338f;top:1px; float:left; padding-right:81px;" })
+    @Html.TextBoxFor(x => x.DateOfRelease, new { @Class = "input-sm form-control", @Style = "top:1px", })
+</div>
+
+
+
